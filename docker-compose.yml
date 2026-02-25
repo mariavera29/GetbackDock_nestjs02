@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17
-    container_name: auth_postgres_dev
+
     environment:
       POSTGRES_DB: auth_db
       POSTGRES_USER: root
@@ -15,6 +15,24 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - dev_net
+
+  backend:
+    build: .
+    container_name: nest_backend_dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: dev
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: auth_db
     networks:
       - dev_net
 
