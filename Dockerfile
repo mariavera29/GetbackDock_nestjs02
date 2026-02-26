@@ -4,6 +4,14 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# ---------- Development ----------
+FROM base AS development
+CMD ["npm", "run", "start:dev"]
+
+# ---------- Production ----------
+FROM base AS production
+RUN npm run build
+CMD ["node", "dist/main.js"]
 # ---------- Build ----------
 FROM base AS build
 COPY . .
