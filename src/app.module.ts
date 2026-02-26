@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { enviroments } from './enviroments';
 import { UsersModule } from './users/users.module';
+import { RolModule } from './rol/rol.module';
 import config from './config';
 
 @Module({
@@ -24,7 +25,8 @@ import config from './config';
       }),
     }),
     DatabaseModule,
-    UsersModule
+    UsersModule,
+    RolModule
   ],
   controllers: [AppController],
   providers: [AppService],
