@@ -1,42 +1,46 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/user.dto';
+import { Repository, In } from 'typeorm';
+
+import { User } from '../../entities/user.entity'; // Subir 2 niveles
+import { Rol } from '../../../rol/entities/rol.entity/rol.entity'; // Subir 3 niveles para llegar a src
+import { CreateUserDto } from '../../dtos/user.dto'; // Subir 2 niveles
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private userRepo: Repository<User>,
+    @InjectRepository(Rol) private rolRepo: Repository<Rol>,
+  ) {}
 
-    users: User[] = [];
-    constructor(@InjectRepository(User) private userRepo: Repository<User>){}
+  async create(data: CreateUserDto) {
+    const { rolesIds, ...userData } = data;
+    
+    // Buscamos los roles existentes en la DB
+    const roles = await this.rolRepo.findBy({
+      id: In(rolesIds),
+    });
 
-    async findAll(){
-        this.users = await this.userRepo.find();
-        return this.users;
+    if (roles.length === 0) {
+      throw new NotFoundException('No se encontraron roles válidos');
     }
 
-    async findOne(userId: number){
-        const user = await this.userRepo.findOne({where: { id: userId }});
-        if (!user) {
-            throw new NotFoundException(`User #${userId} not found`);
-        }
-        return user;
-    }
+    const newUser = this.userRepo.create({
+      ...userData,
+      roles, // Asignamos el array de entidades Rol
+    });
 
-    createUser(payload: CreateUserDto){
-        const newUser = this.userRepo.create(payload);
-        return this.userRepo.save(newUser);
-    }
+    return this.userRepo.save(newUser);
+  }
 
-    async updateUser(id: number, payloadUpdated: UpdateUserDto){
-        const user = await this.userRepo.findOne({where:{id}});
-        if (!user) {
-            throw new NotFoundException(`User #${id} not found`);
-        }
-        this.userRepo.merge(user, payloadUpdated);
-    }
+  findAll() {
+    // Gracias al 'eager: true' en la entidad, ya trae los roles automáticamente
+    return this.userRepo.find();
+  }
 
-    deleteUser(idUser: number){
-        return this.userRepo.delete(idUser);
-    }
+  async findOne(id: number) {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) throw new NotFoundException(`Usuario #${id} no existe`);
+    return user;
+  }
 }

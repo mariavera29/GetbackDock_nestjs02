@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 
-import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
 import { enviroments } from './enviroments';
 import { UsersModule } from './users/users.module';
 import { RolModule } from './rol/rol.module';
@@ -13,7 +14,8 @@ import config from './config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: enviroments[process.env.NODE_ENV || '.env'],
+      // Corregido: Se asegura de que el índice sea válido para TypeScript
+      envFilePath: enviroments[process.env.NODE_ENV as keyof typeof enviroments] || '.env',
       load: [config],
       isGlobal: true,
       validationSchema: Joi.object({
@@ -26,7 +28,7 @@ import config from './config';
     }),
     DatabaseModule,
     UsersModule,
-    RolModule
+    RolModule,
   ],
   controllers: [AppController],
   providers: [AppService],

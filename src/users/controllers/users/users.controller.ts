@@ -1,35 +1,27 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/user.dto';
-import { UsersService } from 'src/users/services/users/users.service';
+import { Controller, Post, Body, Get, Param, ParseIntPipe } from '@nestjs/common';
+// Subimos dos niveles (../../) para salir de controllers/users/
+import { UsersService } from '../../services/users/users.service';
+import { CreateUserDto } from '../../dtos/user.dto';
 
-@Controller('users')
+@Controller('usuarios')
 export class UsersController {
+  constructor(private readonly usuariosService: UsersService) {}
 
-    constructor(private usersService: UsersService){}
+  @Post()
+  async crear(@Body() body: CreateUserDto) {
+    // Usamos el método 'create' que definimos en el Service
+    return this.usuariosService.create(body);
+  }
 
-    @Get()
-    getUsers() {
-        return this.usersService.findAll();
-    }
+  @Get()
+  async findAll() {
+    // Usamos 'findAll' del Service
+    return this.usuariosService.findAll();
+  }
 
-    @Get(':userId')
-    getOne(@Param('userId', ParseIntPipe) userId: number){
-        return this.usersService.findOne(userId);
-    }
-
-    @Post()
-    createUser(@Body() payload: CreateUserDto){
-        return this.usersService.createUser(payload);
-    }
-
-    @Put(':userId')
-    updateUser(@Param('userId', ParseIntPipe) userId: number, @Body() payloadUpdated: UpdateUserDto){
-        return this.usersService.updateUser(userId, payloadUpdated);
-    }
-
-    @Delete(':userId')
-    deleteUser(@Param('userId', ParseIntPipe) userId: number){
-        this.usersService.deleteUser(userId);
-    }
-
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    // Usamos 'findOne' del Service
+    return this.usuariosService.findOne(id);
+  }
 }

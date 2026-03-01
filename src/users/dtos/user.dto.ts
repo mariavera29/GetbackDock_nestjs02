@@ -1,37 +1,19 @@
-/* eslint-disable prettier/prettier */
-import { IsString, IsNotEmpty } from "class-validator";
-import { PartialType, ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { IsString, IsEmail, IsOptional, IsArray, IsNumber } from 'class-validator';
 
-export class CreateUserDto {   
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly name: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly lastName: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly docType: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly docNumber: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly miTest: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly miTest2: string;
+export class CreateUserDto {
+  @IsString() nombre: string;
+  @IsString() apellido: string;
+  @IsEmail() correo: string;
+  @IsString() clave: string;
+  
+  @IsOptional() @IsString() telefono?: string;
+  @IsOptional() @IsString() direccion?: string;
+  @IsOptional() @IsString() foto?: string;
+  @IsOptional() @IsString() horaInicio?: string;
+  @IsOptional() @IsString() horaFin?: string;
+  @IsOptional() @IsString() fecha?: string;
+  
+  @IsArray()
+  @IsNumber({}, { each: true })
+  rolesIds: number[]; // IDs de los roles a vincular
 }
-export class UpdateUserDto extends PartialType(CreateUserDto){}
