@@ -6,9 +6,12 @@ import { RolService } from './services/rol/rol.service';
 import { Rol } from './entities/rol.entity/rol.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Rol])],
+  imports: [
+    // Esto es vital para que el Controller pueda usar el Repository
+    TypeOrmModule.forFeature([Rol])
+  ],
   controllers: [RolController],
-  providers: [RolService],
-  exports: [TypeOrmModule, RolService],
+  providers: [RolService], 
+  exports: [TypeOrmModule, RolService], 
 })
 export class RolModule {}

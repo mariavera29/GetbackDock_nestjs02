@@ -25,4 +25,15 @@ export class RolService {
     const newRol = this.rolRepo.create(data);
     return this.rolRepo.save(newRol);
   }
+
+  async update(id: number, changes: Partial<RolDto>) {
+    const rol = await this.findOne(id);
+    Object.assign(rol, changes);
+    return this.rolRepo.save(rol);
+  }
+
+  async remove(id: number) {
+    const rol = await this.findOne(id);
+    return this.rolRepo.remove(rol);
+  }
 }
