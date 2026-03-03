@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  ManyToMany, 
+  JoinTable 
+} from 'typeorm';
 import { Rol } from '../../rol/entities/rol.entity/rol.entity';
 
 @Entity('usuarios')
@@ -27,19 +33,18 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   foto: string;
 
-  @Column({ type: 'time', name: 'hora_inicio', nullable: true })
-  horaInicio: string;
+  @Column({ type: 'varchar', nullable: true, name: 'hora_inicio' }) // ← CORREGIDO
+  horaInicio?: string;
 
-  @Column({ type: 'time', name: 'hora_fin', nullable: true })
-  horaFin: string;
+  @Column({ type: 'varchar', nullable: true, name: 'hora_fin' }) // ← CORREGIDO
+  horaFin?: string;
 
-  @Column({ type: 'date', nullable: true })
-  fecha: string;
+  @Column({ type: 'varchar', nullable: true, name: 'fecha' })
+  fecha?: string;
 
   @Column({ type: 'varchar', default: 'ACTIVO' })
   estado: string;
 
-  // Relación Muchos a Muchos (Línea 43 corregida)
   @ManyToMany(() => Rol, (rol) => rol.usuarios, {
     cascade: true,
     eager: true,
