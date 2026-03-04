@@ -13,6 +13,6 @@ import { Rol } from '../rol/entities/rol.entity/rol.entity';
   ],
   controllers: [UsersController], 
   providers: [UsersService],
-  exports: [UsersModule] 
+  exports: [UsersService] 
 })
 export class UsersModule {}

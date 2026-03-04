@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { enviroments } from './enviroments';
 import { UsersModule } from './users/users.module';
 import { RolModule } from './rol/rol.module';
+import { AuthModule } from './auth/auth.module';
 import config from './config';
 
 @Module({
@@ -28,6 +29,7 @@ import config from './config';
     }),
     DatabaseModule,
     UsersModule,
+    AuthModule,
     RolModule,
   ],
   controllers: [AppController],

@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseIntPipe, Patch, Delete, UseGuards } from '@nestjs/common';
 // Subimos dos niveles para salir de controllers/rol/
 import { RolService } from '../../services/rol/rol.service';
 import { RolDto } from '../../dtos/rol.dto/rol.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../../auth/guards/jwt.guard';
 
 @ApiTags('roles')
+@ApiBearerAuth('RSO')
 @Controller('roles')
+@UseGuards(JwtAuthGuard)
 export class RolController {
   constructor(private readonly rolService: RolService) {}
 
