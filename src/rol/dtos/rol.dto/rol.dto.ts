@@ -1,1 +1,11 @@
-export class RolDto {}
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+
+export class RolDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre: string;
+
+  @IsString()
+  @IsOptional()
+  descripcion?: string;
+}

@@ -1,37 +1,109 @@
-/* eslint-disable prettier/prettier */
-import { IsString, IsNotEmpty } from "class-validator";
-import { PartialType, ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { 
+  IsString, 
+  IsEmail, 
+  IsOptional, 
+  IsArray, 
+  IsNumber,
+  IsIn,
+  MinLength
+} from 'class-validator';
 
-export class CreateUserDto {   
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly name: string;
+export class CreateUserDto {
+  @IsString()
+  @MinLength(2)
+  nombre: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly lastName: string;
+  @IsString()
+  @MinLength(2)
+  apellido: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly docType: string;
+  @IsEmail()
+  correo: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly docNumber: string;
+  @IsString()
+  @MinLength(6)
+  clave: string;
+  
+  @IsOptional()
+  @IsString()
+  telefono?: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly miTest: string;
+  @IsOptional()
+  @IsString()
+  direccion?: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly miTest2: string;
+  @IsOptional()
+  @IsString()
+  foto?: string;
+
+  @IsOptional()
+  @IsString()
+  horaInicio?: string;
+
+  @IsOptional()
+  @IsString()
+  horaFin?: string;
+
+  @IsOptional()
+  @IsString()
+  fecha?: string;
+  
+  @IsArray()
+  @IsNumber({}, { each: true })
+  rolesIds: number[];
 }
-export class UpdateUserDto extends PartialType(CreateUserDto){}
+
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  nombre?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  apellido?: string;
+
+  @IsOptional()
+  @IsEmail()
+  correo?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  clave?: string;
+  
+  @IsOptional()
+  @IsString()
+  telefono?: string;
+
+  @IsOptional()
+  @IsString()
+  direccion?: string;
+
+  @IsOptional()
+  @IsString()
+  foto?: string;
+
+  @IsOptional()
+  @IsString()
+  horaInicio?: string;
+
+  @IsOptional()
+  @IsString()
+  horaFin?: string;
+
+  @IsOptional()
+  @IsString()
+  fecha?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['ACTIVO', 'INACTIVO'])
+  estado?: string;
+  
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  rolesIds?: number[];
+}

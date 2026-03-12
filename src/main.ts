@@ -10,6 +10,17 @@ async function bootstrap() {
     .setTitle('API')
     .setDescription('The haptica API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'RSO',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'RSO'
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

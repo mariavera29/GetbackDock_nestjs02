@@ -1,35 +1,56 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/user.dto';
-import { UsersService } from 'src/users/services/users/users.service';
+import { Controller, Post, Body, Get, Param, Put, Patch, Delete, UseGuards } from '@nestjs/common';
+import { UsersService } from '../../services/users/users.service';
+import { CreateUserDto, UpdateUserDto } from '../../dtos/user.dto';
+import { JwtAuthGuard } from '../../../auth/guards/jwt.guard';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('users')
+@ApiTags('usuarios')
+@ApiBearerAuth('RSO')
+@Controller('usuarios')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
-    constructor(private usersService: UsersService){}
+  @Post()
+  create(@Body() body: CreateUserDto) {
+    return this.usersService.create(body);
+  }
 
-    @Get()
-    getUsers() {
-        return this.usersService.findAll();
-    }
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
 
-    @Get(':userId')
-    getOne(@Param('userId', ParseIntPipe) userId: number){
-        return this.usersService.findOne(userId);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
 
-    @Post()
-    createUser(@Body() payload: CreateUserDto){
-        return this.usersService.createUser(payload);
-    }
+  @Put(':id')
+  update(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    return this.usersService.update(+id, body);
+  }
 
-    @Put(':userId')
-    updateUser(@Param('userId', ParseIntPipe) userId: number, @Body() payloadUpdated: UpdateUserDto){
-        return this.usersService.updateUser(userId, payloadUpdated);
-    }
+  @Patch(':id')
+  patch(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    return this.usersService.patch(+id, body);
+  }
 
-    @Delete(':userId')
-    deleteUser(@Param('userId', ParseIntPipe) userId: number){
-        this.usersService.deleteUser(userId);
-    }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
 
+  @Patch(':id/estado/:estado')
+  cambiarEstado(
+    @Param('id') id: string, 
+    @Param('estado') estado: 'ACTIVO' | 'INACTIVO'  // ← Corregido aquí
+  ) {
+    return this.usersService.cambiarEstado(+id, estado);
+  }
+
+  @Get('correo/:correo')
+  findByEmail(@Param('correo') correo: string) {
+    return this.usersService.findByEmail(correo);
+  }
 }

@@ -2,8 +2,11 @@ import { DataSource } from 'typeorm';
 import config from '../config';
 import * as dotenv from 'dotenv';
 import { enviroments } from '../enviroments';
-
 import { join } from 'path';
+
+// IMPORTA TUS ENTIDADES REALES AQUÍ
+import { User } from '../users/entities/user.entity'; 
+import { Rol } from '../rol/entities/rol.entity/rol.entity';
 
 const envFile = enviroments[process.env.NODE_ENV as keyof typeof enviroments] || enviroments.dev;
 dotenv.config({ path: envFile });
@@ -16,8 +19,9 @@ export const AppDataSource = new DataSource({
   username: configuration.dataBase.user,
   password: configuration.dataBase.password,
   database: configuration.dataBase.name,
-  synchronize: false,
+  synchronize: false, // Esto creará solo lo que esté en 'entities'
   logging: true,
-  entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
+  // CAMBIA LA LÍNEA DE ABAJO POR ESTA:
+  entities: [User, Rol], 
   migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
 });

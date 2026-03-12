@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - dev_netj
+      - dev_net
 
   backend:
     build: .
